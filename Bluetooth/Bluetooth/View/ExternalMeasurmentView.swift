@@ -4,6 +4,7 @@
 //
 //  Created by Amir Alshammaa on 2025-12-17.
 //
+
 import SwiftUI
 import SwiftData
 
@@ -20,47 +21,62 @@ struct ExternalMeasurementView: View {
     @State private var didSaveThisRun = false
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Text("Measurement")
-                    .font(.title2)
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("Measurement")
+                        .font(.title2)
 
-                Text("Source: External")
-                    .font(.headline)
+                    Text("Source: External")
+                        .font(.headline)
 
-                GraphView(samples: externalVM.samples)
+                    GraphView(samples: externalVM.samples)
 
-                VStack(spacing: 12) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Algorithm 1 (EWMA)")
-                            Text(String(format: "%.1f°", externalVM.latestAngleAlgo1))
-                                .font(.title)
+                    VStack(spacing: 12) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Algorithm 1 (EWMA)")
+                                Text(String(format: "%.1f°", externalVM.latestAngleAlgo1))
+                                    .font(.title)
+                            }
+                            Spacer()
                         }
-                        Spacer()
+
+                        HStack {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Algorithm 2 (Complementary)")
+                                Text(String(format: "%.1f°", externalVM.latestAngleAlgo2))
+                                    .font(.title)
+                            }
+                            Spacer()
+                        }
                     }
 
-                    HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Algorithm 2 (Complementary)")
-                            Text(String(format: "%.1f°", externalVM.latestAngleAlgo2))
-                                .font(.title)
-                        }
-                        Spacer()
-                    }
+                    // Luft så att innehåll inte hamnar bakom bottenknapparna
+                    Spacer(minLength: 90)
                 }
+                .padding()
+            }
 
+            // ---- Bottom actions (alltid längst ner) ----
+            VStack(spacing: 12) {
                 if externalVM.isMeasuring {
                     Button("Stop Measurement") {
                         externalVM.stopMeasurement()
                     }
                     .buttonStyle(.borderedProminent)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
                 } else {
                     Button("Start Measurement") {
                         didSaveThisRun = false
                         externalVM.startMeasurement()
                     }
                     .buttonStyle(.borderedProminent)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
                 }
 
                 Button("Export CSV") {
@@ -69,11 +85,13 @@ struct ExternalMeasurementView: View {
                     }
                 }
                 .disabled(externalVM.samples.isEmpty)
+                .buttonStyle(.bordered)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
             }
             .padding()
         }
-        .navigationTitle("Measurement")
-        .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $exportFile) { file in
             ShareSheet(items: [file.url])
         }

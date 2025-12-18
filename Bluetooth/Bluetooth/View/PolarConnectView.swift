@@ -13,21 +13,8 @@ struct PolarConnectView: View {
     var body: some View {
         VStack(spacing: 16) {
 
-            Text("External Sensor")
+            Text("Connect Sensor")
                 .font(.title2)
-
-            if externalVM.isConnected {
-                Text("Connected to sensor")
-                    .foregroundColor(.green)
-
-                Button("Disconnect") {
-                    externalVM.disconnect()
-                }
-                .buttonStyle(.bordered)
-            } else {
-                Text("Not connected")
-                    .foregroundColor(.secondary)
-            }
 
             Button("Scan for devices") {
                 externalVM.requestScan()
@@ -59,10 +46,23 @@ struct PolarConnectView: View {
                     }
                 }
             }
+            if externalVM.isConnected {
+                Text("Connected to sensor")
+                    .foregroundColor(.green)
+
+                Button("Disconnect") {
+                    externalVM.disconnect()
+                }
+                .font(.title3)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+                .buttonStyle(.bordered)
+
+            } else {
+                Text("Not connected")
+                    .foregroundColor(.secondary)
+            }
         }
-        .padding()
-        .navigationTitle("Connect Sensor")
-        .navigationBarTitleDisplayMode(.inline)
         .alert("Polar Error", isPresented: showAlertBinding()) {
             Button("OK") { externalVM.alertMessage = nil }
         } message: {

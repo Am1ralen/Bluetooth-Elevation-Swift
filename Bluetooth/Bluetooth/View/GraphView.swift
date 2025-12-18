@@ -75,7 +75,8 @@ struct GraphView: View {
         }
         .chartXAxisLabel("Time (s)")
         .chartYAxisLabel("Elevation (deg)")
-        .frame(height: 220)
+        .frame(maxWidth: .infinity)   // <-- gör den horisontellt större
+        .frame(height: 300)           // <-- lite högre också (justera fritt)
         .transaction { $0.animation = nil }
     }
 }

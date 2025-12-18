@@ -33,9 +33,6 @@ struct HistoryView: View {
             .onDelete(perform: deleteMeasurements)
         }
         .navigationTitle("History")
-        .toolbar {
-            EditButton()
-        }
     }
 
     private func deleteMeasurements(at offsets: IndexSet) {

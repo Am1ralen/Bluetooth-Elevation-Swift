@@ -4,6 +4,7 @@
 //
 //  Created by Amir Alshammaa on 2025-12-18.
 //
+
 import SwiftUI
 import SwiftData
 
@@ -20,47 +21,64 @@ struct InternalMeasurementView: View {
     @State private var didSaveThisRun = false
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Text("Measurement")
-                    .font(.title2)
+        // Byter från ScrollView till att "pinna" bottenknapparna.
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("Measurement")
+                        .font(.title2)
 
-                Text("Source: Internal")
-                    .font(.headline)
+                    Text("Source: Internal")
+                        .font(.headline)
 
-                GraphView(samples: internalVM.samples)
+                    GraphView(samples: internalVM.samples)
+                        .padding(.top, 4)
 
-                VStack(spacing: 12) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Algorithm 1 (EWMA)")
-                            Text(String(format: "%.1f°", internalVM.latestAngleAlgo1))
-                                .font(.title)
+                    VStack(spacing: 12) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Algorithm 1 (EWMA)")
+                                Text(String(format: "%.1f°", internalVM.latestAngleAlgo1))
+                                    .font(.title)
+                            }
+                            Spacer()
                         }
-                        Spacer()
+
+                        HStack {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Algorithm 2 (Complementary)")
+                                Text(String(format: "%.1f°", internalVM.latestAngleAlgo2))
+                                    .font(.title)
+                            }
+                            Spacer()
+                        }
                     }
 
-                    HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Algorithm 2 (Complementary)")
-                            Text(String(format: "%.1f°", internalVM.latestAngleAlgo2))
-                                .font(.title)
-                        }
-                        Spacer()
-                    }
+                    // Lite luft så att innehållet inte hamnar bakom bottenknapparna
+                    Spacer(minLength: 90)
                 }
+                .padding()
+            }
 
+            // ---- Bottom actions (alltid längst ner) ----
+            VStack(spacing: 12) {
                 if internalVM.isMeasuring {
                     Button("Stop Measurement") {
                         internalVM.stopMeasurement()
                     }
                     .buttonStyle(.borderedProminent)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
                 } else {
                     Button("Start Measurement") {
                         didSaveThisRun = false
                         internalVM.startMeasurement()
                     }
                     .buttonStyle(.borderedProminent)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
                 }
 
                 Button("Export CSV") {
@@ -69,11 +87,13 @@ struct InternalMeasurementView: View {
                     }
                 }
                 .disabled(internalVM.samples.isEmpty)
+                .buttonStyle(.bordered)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
             }
             .padding()
         }
-        .navigationTitle("Measurement")
-        .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $exportFile) { file in
             ShareSheet(items: [file.url])
         }

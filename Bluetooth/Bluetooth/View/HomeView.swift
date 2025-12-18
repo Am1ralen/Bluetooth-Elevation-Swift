@@ -4,6 +4,7 @@
 //
 //  Created by Amir Alshammaa on 2025-12-17.
 //
+
 import SwiftUI
 
 struct HomeView: View {
@@ -12,37 +13,61 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
+            VStack {
 
-                Text("Arm Elevation")
+                // Texten längst upp
+                Text("Welcome")
                     .font(.largeTitle)
+                    .padding(.top, 60)
+                
+                Text("Measure your arm elevation using different sensors")
+                    .font(.subheadline)
+                    
 
-                NavigationLink("Internal Measurement") {
-                    InternalMeasurementView()
-                }
-                .buttonStyle(.borderedProminent)
+                Spacer() // <-- trycker ner resten
 
-                NavigationLink("External Measurement") {
-                    ExternalMeasurementView(externalVM: externalVM)
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(!externalVM.isConnected)
+                VStack(spacing: 15) {
 
-                NavigationLink("Connect External Sensor") {
-                    PolarConnectView(externalVM: externalVM)
-                }
-                .buttonStyle(.bordered)
+                    NavigationLink("Internal Sensor Measurement") {
+                        InternalMeasurementView()
+                    }
+                    .font(.title3)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .buttonStyle(.bordered)
 
-                if externalVM.isConnected {
-                    Text("External sensor connected")
-                        .foregroundColor(.green)
-                        .font(.caption)
+                    NavigationLink("External Sensor Measurement") {
+                        ExternalMeasurementView(externalVM: externalVM)
+                    }
+                    .font(.title3)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .buttonStyle(.bordered)
+
+                    NavigationLink("Connect External Sensor") {
+                        PolarConnectView(externalVM: externalVM)
+                    }
+                    .font(.title3)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .buttonStyle(.bordered)
+
+                    if externalVM.isConnected {
+                        Text("External sensor connected")
+                            .foregroundColor(.green)
+                            .font(.caption)
+                    }
+
+                    NavigationLink("History") {
+                        HistoryView()
+                    }
+                    .font(.title3)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .buttonStyle(.bordered)
                 }
 
-                NavigationLink("History") {
-                    HistoryView()
-                }
-                .buttonStyle(.bordered)
+                Spacer() // <-- balanserar layouten snyggt
             }
             .padding()
         }
